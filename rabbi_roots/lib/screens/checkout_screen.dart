@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rabbi_roots/screens/make_payment_screen.dart';
 
 class CheckoutScreen extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class CheckoutScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Checkout',
+              'Rabbi Roots',
               style: TextStyle(color: Colors.black),
             ),
           ],
@@ -107,12 +108,16 @@ class CheckoutScreen extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildRecommendedItem('Besan Atta', '₹250'),
-                  _buildRecommendedItem('Black Till', '₹125'),
+                  _buildRecommendedItem('Besan Atta', '₹250',
+                      'https://s3-alpha-sig.figma.com/img/6ba4/0efd/b1c0ff7c1e47be56e17bd1f72cfc1231?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=HOKO1iBhUtQ7OyQ6KVcMYLLruNwwLoXPQFW2pzeBKRr2z4iN-p-oKLf0ZiYsRPjRVMbxre9okoTm6wAh8Rq7qlHCm6GlkRhFbkEj9n1A9r6kvEvyBzcEBtRdukzCTQ1kKjcURVM7-Q8vEAqyBC5p5TokFOFauS0U-8ArWGHD4-G0ALlJXFYJL3bA2wSUSvmCs2tOUMktwVBHVRwmfQIqBOOIhINUVoLNlR8VopG4mLuBbA6hrEN~5-7MQIvHoUma6DNlrnDpIno0veRiNA82LzbVGDxbazWp6WLhUzQWQdgcc-QxO0mEhp8u1sqiVfNlTiwEEZA-kf2kTDEtl0ZBHQ__'),
+                  _buildRecommendedItem('Black Till', '₹125',
+                      'https://s3-alpha-sig.figma.com/img/81c6/1b28/d0fb1b18e3f28c5eecbcbf8a464ba0c7?Expires=1735516800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Am3xJN7poJD3qS-lp6KHwjnLLncbICUEZeJOvbQlG4lNpegRBkc1NPYQK6UrppEZbjE-9I~sgSm2htoNQ0e6Eo0qo1CoKeQeIp72WhVWhUS12ji0HeMSjJzQRXmdehF2BO8bArP0cOwhnzhCbgy83G0Jr~OF1l6yJceE1MTRtWnCa0IN1f1no-WT4Bdw08AsnW1NRgKIge6~Eag9vHxeVmE4238idHH9az7OtFXE6wGP2vVs1A2~KhaucNbiZ3sPG~XZJSIfUarz~MqtWoUG1v7Oz1FjtOXcdWlQLFghxdLOz2eMSGSYKn6HA6pifTF9IUK2KhoEHmIRwOIrFn5XtA__'),
                 ],
               ),
             ),
             SizedBox(height: 16),
+            Text('Offers and Benefits',
+                style: TextStyle(fontWeight: FontWeight.bold)),
 
             // Offers and Benefits
             Card(
@@ -182,7 +187,13 @@ class CheckoutScreen extends StatelessWidget {
                   backgroundColor: Colors.orange,
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MakePaymentScreen()),
+                  );
+                },
                 child: Text('Proceed To Pay',
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
@@ -193,13 +204,13 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecommendedItem(String name, String price) {
+  Widget _buildRecommendedItem(String name, String price, String imageUrl) {
     return Container(
       margin: EdgeInsets.only(right: 16),
       child: Column(
         children: [
           Image.network(
-            'https://via.placeholder.com/100',
+            imageUrl,
             height: 80,
             width: 80,
             fit: BoxFit.cover,
@@ -215,12 +226,14 @@ class CheckoutScreen extends StatelessWidget {
   }
 
   Widget _buildDeliveryInstruction(String label, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, size: 32, color: Colors.grey),
-        SizedBox(height: 8),
-        Text(label, textAlign: TextAlign.center),
-      ],
+    return Card(
+      child: Column(
+        children: [
+          Icon(icon, size: 32, color: Colors.grey),
+          SizedBox(height: 8),
+          SizedBox(child: Text(label, textAlign: TextAlign.center)),
+        ],
+      ),
     );
   }
 

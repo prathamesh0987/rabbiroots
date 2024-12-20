@@ -38,10 +38,30 @@ dependencies:
   http: ^1.2.2
   carousel_slider: ^5.0.0
   google_sign_in: ^6.2.2
+  firebase_auth: ^5.3.3
+  firebase_core: ^3.8.0
+  shimmer: ^3.0.0
+  font_awesome_flutter: ^10.8.0
+  get: ^4.6.6
+  shimmer_animation: ^2.2.1
+  shared_preferences: ^2.0.15
+  geolocator: ^13.0.1
+  location: ^7.0.1
+  geocoding: ^3.0.0
+  flutter_otp_text_field: ^1.2.0
+  google_maps_flutter: ^2.10.0
+  flutter_typeahead: ^4.6.1
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -63,6 +83,18 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/font/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/font/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/font/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/font/Roboto-Black.ttf
+          weight: 900
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

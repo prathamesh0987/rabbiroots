@@ -11,13 +11,10 @@ class ProductGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // Three items per row
-        childAspectRatio:
-            1.0, // Adjust aspect ratio to make the card look better
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200, // Maximum width of each grid item
       ),
-      itemCount:
-          products.length, // Dynamically use the length of categories list
+      itemCount: products.length, // Use the length of the products list
       itemBuilder: (context, index) {
         return ProductCard(product: products[index]);
       },
@@ -39,16 +36,15 @@ class ProductCard extends StatelessWidget {
         // Image of the product
         Card(
           color: Colors.white,
-          // Padding around the image
           child: Image.asset(
-            product.imageUrl, // The image URL provided in Category
+            product.imageUrl, // The image URL provided in Product
             width: double.infinity,
             height: 100,
             fit: BoxFit.contain, // Ensure image maintains aspect ratio
           ),
         ),
         const SizedBox(height: 8), // Space between image and text
-        // Category name
+        // Product name
         Text(
           product.name,
           textAlign: TextAlign.center,
@@ -58,7 +54,7 @@ class ProductCard extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
-        // Product price
+        // You can add more widgets here (e.g., product price)
       ],
     );
   }

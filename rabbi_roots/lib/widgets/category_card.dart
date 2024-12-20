@@ -1,39 +1,116 @@
 import 'package:flutter/material.dart';
-import 'package:rabbi_roots/screens/checkout_screen.dart';
-import 'package:rabbi_roots/widgets/product_detail_modal.dart';
+import 'package:rabbi_roots/models/category2.dart';
+import 'package:rabbi_roots/screens/category_product_screen.dart';
 
-class CategoryList extends StatelessWidget {
-  final List<Category> categories;
-  final ProductCardScreen productCardScreen = ProductCardScreen();
+class CategoryList extends StatefulWidget {
+  final Future<List<Category>> categories;
 
   CategoryList({required this.categories});
 
   @override
+  _CategoryListState createState() => _CategoryListState();
+}
+
+class _CategoryListState extends State<CategoryList> {
+  TextEditingController _searchController = TextEditingController();
+  List<Category> _filteredCategories = [];
+  List<Category> _allCategories = []; // Store the original categories
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // Function to filter categories based on search text
+  void _filterCategories(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _filteredCategories = _allCategories;
+      });
+    } else {
+      setState(() {
+        _filteredCategories = _allCategories
+            .where((category) =>
+                category.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Two items per row
-        childAspectRatio:
-            1.0, // Adjust aspect ratio to make the card look better
-      ),
-      itemCount:
-          categories.length, // Dynamically use the length of categories list
-      itemBuilder: (context, index) {
+    return FutureBuilder<List<Category>>(
+      future: widget.categories,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No categories found!'));
+        }
+
+        // Data is available
+        if (_allCategories.isEmpty) {
+          _allCategories = snapshot.data!; // Store all categories
+          _filteredCategories =
+              _allCategories; // Initially display all categories
+        }
+
         return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () {
-              // Handle card click here
-              // You can navigate to another screen with more details
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => productCardScreen),
-              );
-              // productCardScreen;
-            },
-            child: CategoryCard(category: categories[index]),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Search Box
+              TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  _filterCategories(value); // Filter categories as user types
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search by category name',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Categories Grid
+              Expanded(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4, // Two items per row
+                    childAspectRatio:
+                        0.7, // Adjust aspect ratio for the desired layout
+                  ),
+                  itemCount: _filteredCategories.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to category products screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryProductsScreen(
+                              categoryId: _filteredCategories[index].id,
+                              categoryName: _filteredCategories[index].name,
+                              subcategories:
+                                  _filteredCategories[index].subcategories,
+                            ),
+                          ),
+                        );
+                      },
+                      child: CategoryCard(category: _filteredCategories[index]),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -48,40 +125,55 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Image
-        Card(
+    return Padding(
+      padding: const EdgeInsets.only(),
+      child: Container(
+        height: 60,
+        width: 70,
+        decoration: BoxDecoration(
           color: Colors.white,
-          // Padding around the image
-          child: Image.asset(
-            category.imageUrl, // The image URL provided in Category
-            width: double.infinity,
-            height: 150,
-            fit: BoxFit.contain, // Ensure image maintains aspect ratio
-          ),
+          borderRadius: BorderRadius.circular(13),
         ),
-        const SizedBox(height: 8), // Space between image and text
-        // Category name
-        Text(
-          category.name,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Category image
+            Container(
+              width: 86,
+              height: 85,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50, // Background for the image
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Image.network(
+                  height: 80,
+                  width: 80,
+                  category.imageUrl,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Category name
+            SizedBox(
+              height: 30,
+              child: Text(
+                category.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
-}
-
-class Category {
-  final String name;
-  final String imageUrl;
-
-  Category({required this.name, required this.imageUrl});
 }

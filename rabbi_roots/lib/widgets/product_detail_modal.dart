@@ -1,9 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:rabbi_roots/screens/checkout_screen.dart';
 
-class ProductCardScreen extends StatelessWidget {
+class ProductCardScreen extends StatefulWidget {
+  @override
+  _ProductCardScreenState createState() => _ProductCardScreenState();
+}
+
+class _ProductCardScreenState extends State<ProductCardScreen> {
+  int _quantity = 1;
+  int _currentIndex = 0; // To track the current page of the PageView
+
+  // Method to handle quantity increment
+  void _incrementQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  // Method to handle quantity decrement
+  void _decrementQuantity() {
+    if (_quantity > 1) {
+      setState(() {
+        _quantity--;
+      });
+    }
+  }
+
+  // List of image paths
+  final List<String> _imageList = [
+    'assets/atta.png', // Replace with your actual image assets
+    'assets/atta.png', // Example image 2
+    'assets/atta.png', // Example image 3
+    // Add more images here...
+  ];
+
+  // Dot indicator widget
+  Widget _buildDotIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        _imageList.length,
+        (index) => Container(
+          margin: EdgeInsets.symmetric(horizontal: 4.0),
+          height: 8.0,
+          width: 8.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _currentIndex == index
+                ? Colors.blue
+                : Colors.grey, // Active dot is blue, inactive is grey
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double itemPrice = 510.0; // Price after discount
+    final double totalPrice = itemPrice * _quantity;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Product Details'),
@@ -23,15 +79,33 @@ class ProductCardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Product Image
-              Center(
-                child: Image.asset(
-                  'assets/atta.png', // Replace with your asset path
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.contain,
+              // Horizontal Image Slider (PageView with Dot Indicator)
+              Container(
+                height: 250, // Adjust height as necessary
+                child: PageView.builder(
+                  itemCount: _imageList.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentIndex =
+                          index; // Update current index on page change
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Image.asset(
+                        _imageList[index],
+                        width: 200,
+                        height: 200,
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
                 ),
               ),
+              SizedBox(height: 8),
+              // Dot indicator
+              _buildDotIndicator(),
               SizedBox(height: 16),
 
               // Product Title and Subtitle
@@ -113,7 +187,7 @@ class ProductCardScreen extends StatelessWidget {
                           ),
                           SizedBox(width: 16),
                           Text(
-                            '₹510',
+                            '₹$itemPrice',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -145,9 +219,7 @@ class ProductCardScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(Icons.remove, color: Colors.grey),
-                        onPressed: () {
-                          // Handle decrement logic
-                        },
+                        onPressed: _decrementQuantity,
                       ),
                       Container(
                         padding:
@@ -157,15 +229,13 @@ class ProductCardScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '1',
+                          '$_quantity',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                       IconButton(
                         icon: Icon(Icons.add, color: Colors.green),
-                        onPressed: () {
-                          // Handle increment logic
-                        },
+                        onPressed: _incrementQuantity,
                       ),
                     ],
                   ),
@@ -188,7 +258,7 @@ class ProductCardScreen extends StatelessWidget {
                       ); // Navigate to Checkout screen
                     },
                     child: Text(
-                      'Add Item | ₹510',
+                      'Add Item | ₹$totalPrice',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
