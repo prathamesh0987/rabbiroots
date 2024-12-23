@@ -148,7 +148,7 @@ class _DeliverySectionState extends State<DeliverySection> {
                 },
                 child: const CircleAvatar(
                   backgroundImage: NetworkImage(
-                    'https://s3-alpha-sig.figma.com/img/4eed/dea2/50b16a6f7edf69ea1cf19a2c703ed08d?Expires=1734912000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=oDK7YXd4KT3lW983wBE2sfdaMY1lKKN9og5T6hEZwh-hrAcSqNAkUpPiEYV5nIqit0P7qva1-r4vimS1QX-dXQrW5EcY6BK-JYT388wSGvEkPjINuTNW4KB6pyKQpnqwbN5WyLgjg5zIzLh~L~IWrgdPOq-PbTuQlwDLtIXnQsAgKgkB4iPBpz14GYH0gCHtZXCRQzWX9e-k8KTBKxG6QH-4Gyi-hs7rjnyCznDbTJDhwhq~ul9OoDW1W4pd~QXUfbA0a3oK13jfFSH-PSJFdYwT~q~xnO1K5SjtSqwblUm9I2Xt0pbfcEeK~Jht77~VQhpfaAX6MZ0N9ogC-HwbQg__',
+                    'https://s3-alpha-sig.figma.com/img/4eed/dea2/50b16a6f7edf69ea1cf19a2c703ed08d?Expires=1736121600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=oda-2Ww5yNZa-AF2ys1fcHgEyvA--adJUq~NWttbbj9SJffd8BcqSfcUETwZH-PKlZ2EmnUxfRhV-GQynMmIKy9rFX3pgY3Zh8xnEAVUJOuMl0xGCB5Xu8pcHCvvpSQdv2DBVOHe0-Nm~bEnS8UmWQz5dtiT4PWHXSTAwG2YKm-SV5DtPoSBnbkDTacXZMhs9scY-XW7y5gFjV-jXsIVsNlvppxNNOOPIy4F~QoqUN7-mtd0bV0e0lTm9q6l9WCV~caN0UQAjr-UF-PSFxh97EyVrsm5LmpViTp6SWDbGYjMv20W10NYxiZ~seIi9iTpGVQ0fEzU17UaWBtRdINc5w__',
                   ),
                   radius: 22.5,
                 ),
