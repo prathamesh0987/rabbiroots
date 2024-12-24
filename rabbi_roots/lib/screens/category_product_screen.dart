@@ -1,11 +1,15 @@
-// lib/screens/category_products_screen.dart
-
 import 'package:flutter/material.dart';
-import 'package:rabbi_roots/services/api_service.dart'; // Import the ApiService
-import 'package:rabbi_roots/widgets/product_card_sub.dart'; // Assuming the ProductCard widget is inside this file
+import 'package:provider/provider.dart';
+import 'package:rabbi_roots/models/cart.dart';
+import 'package:rabbi_roots/services/api_service.dart';
+import 'package:rabbi_roots/widgets/bottomsheet.dart';
+import 'package:rabbi_roots/widgets/cart_button.dart';
+import 'package:rabbi_roots/widgets/product_card_sub.dart';
+import 'package:rabbi_roots/widgets/product_detail_modal.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'package:rabbi_roots/screens/checkout_screen.dart';
+import 'package:badges/badges.dart' as badge; // Import the badges package a
 
 class CategoryProductsScreen extends StatefulWidget {
   final String categoryId;
@@ -70,6 +74,26 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
       "subcategory": "Fresh Fruits",
       "imageUrl": "assets/test.jpg",
     },
+    {
+      "name": "",
+      "weight": "10kg",
+      "price": 120,
+      "mrp": 150,
+      "discount": 30,
+      "deliveryTime": "20 mins",
+      "subcategory": "Fresh Fruits",
+      "imageUrl": "assets/test.jpg",
+    },
+    {
+      "name": "Apple",
+      "weight": "10kg",
+      "price": 120,
+      "mrp": 150,
+      "discount": 30,
+      "deliveryTime": "20 mins",
+      "subcategory": "Fresh Fruits",
+      "imageUrl": "assets/test.jpg",
+    },
   ];
 
   @override
@@ -117,6 +141,25 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.categoryName),
+        actions: [
+          Consumer<CartModel>(
+            builder: (context, cart, child) {
+              return badge.Badge(
+                position: badge.BadgePosition.topEnd(top: 5, end: 5),
+                badgeContent: Text(
+                  cart.items.length.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    showCartBottomSheet(context);
+                  },
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Row(
         children: [
@@ -158,7 +201,6 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   }
 
   // Build sidebar with actual subcategories
-// Sidebar with actual subcategories (or dummy ones if the API call fails or is skipped)
   Widget buildSubcategorySidebar() {
     return Container(
       width: 80,
@@ -253,13 +295,30 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return ProductCard(
-          imageUrl: product["imageUrl"],
-          weight: product["weight"],
-          productName: product["name"],
-          deliveryTime: product["deliveryTime"],
-          price: product["price"],
-          mrp: product["mrp"],
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductCardScreen(
+                  imageUrl: product["imageUrl"],
+                  weight: product["weight"],
+                  productName: product["name"],
+                  deliveryTime: product["deliveryTime"],
+                  price: product["price"],
+                  mrp: product["mrp"],
+                ),
+              ),
+            );
+          },
+          child: ProductCard(
+            imageUrl: product["imageUrl"],
+            weight: product["weight"],
+            productName: product["name"],
+            deliveryTime: product["deliveryTime"],
+            price: product["price"],
+            mrp: product["mrp"],
+          ),
         );
       },
     );

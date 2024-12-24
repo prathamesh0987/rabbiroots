@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rabbi_roots/screens/checkout_screen.dart';
 
 class ProductCardScreen extends StatefulWidget {
+  final String imageUrl;
+  final String weight;
+  final String productName;
+  final String deliveryTime;
+  final int price;
+  final int mrp;
+
+  const ProductCardScreen({
+    Key? key,
+    required this.imageUrl,
+    required this.weight,
+    required this.productName,
+    required this.deliveryTime,
+    required this.price,
+    required this.mrp,
+  }) : super(key: key);
+
   @override
   _ProductCardScreenState createState() => _ProductCardScreenState();
 }
@@ -57,8 +75,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double itemPrice = 510.0; // Price after discount
-    final double totalPrice = itemPrice * _quantity;
+    final int itemPrice = widget.price; // Use the price passed via constructor
+    final int totalPrice = itemPrice * _quantity;
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +84,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         backgroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
+            icon: Icon(Icons.close, color: Colors.black),
             onPressed: () {
               Navigator.of(context).pop(); // Close the screen
             },
@@ -110,7 +128,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
               // Product Title and Subtitle
               Text(
-                'Aiwa Multigrain Atta',
+                widget.productName,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -118,7 +136,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 textAlign: TextAlign.center,
               ),
               Text(
-                '5Kg',
+                widget.weight,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
@@ -135,7 +153,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 ),
                 child: ListTile(
                   leading: Image.asset(
-                    'assets/atta.png', // Replace with brand logo asset
+                    widget.imageUrl, // Replace with brand logo asset
                     height: 40,
                     fit: BoxFit.contain,
                   ),
@@ -198,7 +216,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                       SizedBox(height: 8),
                       // MRP info
                       Text(
-                        'MRP ₹600',
+                        'MRP ₹${widget.mrp}',
                         style: TextStyle(
                           color: Colors.grey,
                           decoration: TextDecoration.lineThrough,

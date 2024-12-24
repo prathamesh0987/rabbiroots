@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:rabbi_roots/models/cart.dart';
 import 'package:rabbi_roots/screens/forgot_screen.dart';
 import 'package:rabbi_roots/screens/reset_password_screen.dart';
 import 'package:rabbi_roots/screens/sign_in_screen.dart';
@@ -8,6 +10,7 @@ import 'package:rabbi_roots/screens/splash_screens/splash_screen.dart';
 import 'package:rabbi_roots/screens/splash_screens/splash_screen_1.dart';
 import 'package:rabbi_roots/screens/login_screen.dart';
 import 'package:rabbi_roots/screens/home_screen.dart';
+import 'package:rabbi_roots/services/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/api_service.dart';
 
@@ -16,7 +19,16 @@ void main() async {
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartModel(),
+      child: ChangeNotifierProvider(
+        create: (context) =>
+            ConnectivityService(), // Add ConnectivityService here
+        child: MyApp(isLoggedIn: isLoggedIn),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
